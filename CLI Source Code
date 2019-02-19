@@ -1,0 +1,64 @@
+scala> val sqlContext = new org.apache.spark.sql.SQLContext(sc)
+warning: there was one deprecation warning; re-run with -deprecation for details
+sqlContext: org.apache.spark.sql.SQLContext = org.apache.spark.sql.SQLContext@57859e2c
+
+scala> import sqlContext.implicits._
+import sqlContext.implicits._
+
+scala> import org.apache.spark.sql._
+import org.apache.spark.sql._
+
+scala> val AadharText = sc.textFile("Aadhar.csv")
+AadharText: org.apache.spark.rdd.RDD[String] = Aadhar.csv MapPartitionsRDD[1] at textFile at <console>:32
+
+scala> case class Inception(Registrar: String, EnrolmentAgency: String, State: String, District: String, SubDistrict: String, PinCode: String, Gender: String, Age: String, AadharGenerated: String, ER: String, Rem: String, Rno: String)
+defined class Inception
+
+scala> val Legend = AadharText.map(_.split(",")).map(p => Inception(p(0),p(1),p(2),p(3),p(4),p(5),p(6),p(7),p(8),p(9),p(10),p(11) ))
+Legend: org.apache.spark.rdd.RDD[Inception] = MapPartitionsRDD[3] at map at <console>:35
+
+scala> val Inception = Legend.toDF()
+Inception: org.apache.spark.sql.DataFrame = [Registrar: string, EnrolmentAgency: string ... 10 more fields]
+
+scala> Inception.show()
++--------------------+--------------------+-------------+----------+-----------+-------+------+---+----------------+---+---+---+
+|           Registrar|     EnrolmentAgency|        State|  District|SubDistrict|PinCode|Gender|Age| AadharGenerated| ER|Rem|Rno|
++--------------------+--------------------+-------------+----------+-----------+-------+------+---+----------------+---+---+---+
+|           Registrar|     EnrolmentAgency|        State|  District|SubDistrict|PinCode|Gender|Age|AadhaarGenerated| ER|Rem|Rno|
+|      Allahabad Bank|A-Onerealtors Pvt...|Uttar Pradesh| Allahabad|       Meja| 212303|     F|  7|               1|  0|  0|  1|
+|      Allahabad Bank|Asha Security Gua...|Uttar Pradesh| Sonbhadra|Robertsganj| 231213|     M|  8|               1|  0|  0|  0|
+|      Allahabad Bank|   SGS INDIA PVT LTD|Uttar Pradesh| Sultanpur|  Sultanpur| 227812|     F| 13|               1|  0|  0|  1|
+|      Allahabad Bank|Sri Ramraja Sarka...|Uttar Pradesh|    Shamli|     Shamli| 247775|     M|  6|               1|  0|  0|  1|
+|      Allahabad Bank|  Transmoovers India|Uttar Pradesh| Gorakhpur|   Sahjanwa| 273001|     M|  8|               1|  0|  0|  1|
+|      Allahabad Bank|  Transmoovers India|Uttar Pradesh|  Varanasi|     Pindra| 221101|     M| 14|               1|  0|  0|  1|
+|      Allahabad Bank|  Transmoovers India|Uttar Pradesh|  Varanasi|   Varanasi| 221001|     M|  9|               1|  0|  0|  1|
+|      Allahabad Bank|  Transmoovers India|Uttar Pradesh|  Varanasi|   Varanasi| 221002|     M|  4|               1|  0|  0|  1|
+|      Allahabad Bank|  Transmoovers India|Uttar Pradesh|  Varanasi|   Varanasi| 221002|     M| 10|               0|  1|  0|  1|
+|      Allahabad Bank|  Transmoovers India|Uttar Pradesh|  Varanasi|   Varanasi| 221002|     M| 19|               1|  0|  0|  1|
+|      Allahabad Bank|Vedavaag Systems ...|Uttar Pradesh|Bara Banki|  Nawabganj| 225301|     M|  8|               1|  0|  0|  0|
+|Atalji Janasnehi ...|Atalji Janasnehi ...|        Assam|  Marigaon|  Bhuragaon| 782121|     M| 22|               1|  0|  0|  1|
+|Atalji Janasnehi ...|Atalji Janasnehi ...|        Bihar| Gopalganj| Vijayeepur| 841508|     M| 26|               1|  0|  0|  1|
+|Atalji Janasnehi ...|Atalji Janasnehi ...|    Karnataka|  Bagalkot|     Badami| 587114|     M| 27|               1|  0|  0|  1|
+|Atalji Janasnehi ...|Atalji Janasnehi ...|    Karnataka|  Bagalkot|     Badami| 587155|     F|  2|               1|  0|  0|  1|
+|Atalji Janasnehi ...|Atalji Janasnehi ...|    Karnataka|  Bagalkot|     Badami| 587155|     M| 67|               1|  0|  0|  1|
+|Atalji Janasnehi ...|Atalji Janasnehi ...|    Karnataka|  Bagalkot|     Badami| 587201|     F| 32|               1|  0|  0|  1|
+|Atalji Janasnehi ...|Atalji Janasnehi ...|    Karnataka|  Bagalkot|     Badami| 587203|     M| 27|               1|  0|  0|  1|
+|Atalji Janasnehi ...|Atalji Janasnehi ...|    Karnataka|  Bagalkot|     Badami| 587206|     F| 40|               1|  0|  0|  0|
++--------------------+--------------------+-------------+----------+-----------+-------+------+---+----------------+---+---+---+
+only showing top 20 rows
+
+
+scala> Inception.printSchema()
+root
+ |-- Registrar: string (nullable = true)
+ |-- EnrolmentAgency: string (nullable = true)
+ |-- State: string (nullable = true)
+ |-- District: string (nullable = true)
+ |-- SubDistrict: string (nullable = true)
+ |-- PinCode: string (nullable = true)
+ |-- Gender: string (nullable = true)
+ |-- Age: string (nullable = true)
+ |-- AadharGenerated: string (nullable = true)
+ |-- ER: string (nullable = true)
+ |-- Rem: string (nullable = true)
+ |-- Rno: string (nullable = true)
